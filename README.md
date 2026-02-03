@@ -7,7 +7,7 @@ pnpm install
 ```
 
 ```bash
-pnpm run dev
+pnpm dev
 ```
 
 View your project running locally at [http://localhost:3000](http://localhost:3000)
