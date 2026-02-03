@@ -3,11 +3,11 @@
 ## Overview
 
 ```bash
-npm install
+pnpm install
 ```
 
 ```bash
-npm run dev
+pnpm run dev
 ```
 
 View your project running locally at [http://localhost:3000](http://localhost:3000)
