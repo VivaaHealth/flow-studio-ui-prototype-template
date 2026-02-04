@@ -4,7 +4,7 @@ A rapid prototyping environment for Notable product design. Built with Vite + Re
 
 > ⚠️ **This is a prototype sandbox** — not a production app. All data is local (IndexedDB). No API connections.
 
-<img width="3584" height="2084" alt="image" src="https://github.com/user-attachments/assets/6f9b9df0-e7f2-4d8c-9ab0-f99182b45693" />
+<img width="1912" height="1242" alt="Screenshot 2026-02-03 at 6 29 16 PM" src="https://github.com/user-attachments/assets/36f0885e-17a8-4437-a474-00cba7253630" />
 
 ---
 
