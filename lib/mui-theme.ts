@@ -1,17 +1,13 @@
 import { createTheme } from "@mui/material/styles"
-import { Inter } from "next/font/google"
 
-const inter = Inter({
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
-  display: "swap",
-})
+// MUI theme configuration aligned with @vivaahealth/design-system
+// This provides fallback styling for MUI components not covered by the design system
 
 export const muiTheme = createTheme({
   palette: {
     primary: {
-      main: "#002766", // Notable primary color
-      light: "#003A99", // Notable secondary color
+      main: "#002766",
+      light: "#003A99",
       dark: "#001a4d",
       contrastText: "#ffffff",
     },
@@ -55,7 +51,7 @@ export const muiTheme = createTheme({
     },
   },
   typography: {
-    fontFamily: inter.style.fontFamily,
+    fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
     fontSize: 14,
     h1: {
       fontSize: "1.5rem",
@@ -115,32 +111,7 @@ export const muiTheme = createTheme({
   shape: {
     borderRadius: 4,
   },
-  spacing: 4, // Base spacing unit (4px)
-  shadows: [
-    "none",
-    "0 1px 2px 0 rgb(0 0 0 / 0.05)",
-    "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)",
-    "0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)",
-    "0 2px 8px 0 rgb(0 0 0 / 0.08)", // actionBar shadow
-    "0 1px 2px 0 rgb(0 0 0 / 0.05)",
-    "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)",
-    "0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)",
-    "0 25px 50px -12px rgb(0 0 0 / 0.25)",
-    "0 25px 50px -12px rgb(0 0 0 / 0.25)",
-    "0 25px 50px -12px rgb(0 0 0 / 0.25)",
-    "0 25px 50px -12px rgb(0 0 0 / 0.25)",
-    "0 25px 50px -12px rgb(0 0 0 / 0.25)",
-    "0 25px 50px -12px rgb(0 0 0 / 0.25)",
-    "0 25px 50px -12px rgb(0 0 0 / 0.25)",
-    "0 25px 50px -12px rgb(0 0 0 / 0.25)",
-    "0 25px 50px -12px rgb(0 0 0 / 0.25)",
-    "0 25px 50px -12px rgb(0 0 0 / 0.25)",
-    "0 25px 50px -12px rgb(0 0 0 / 0.25)",
-    "0 25px 50px -12px rgb(0 0 0 / 0.25)",
-    "0 25px 50px -12px rgb(0 0 0 / 0.25)",
-    "0 25px 50px -12px rgb(0 0 0 / 0.25)",
-    "0 25px 50px -12px rgb(0 0 0 / 0.25)",
-  ],
+  spacing: 4,
   components: {
     MuiButton: {
       styleOverrides: {
@@ -188,24 +159,6 @@ export const muiTheme = createTheme({
       styleOverrides: {
         paper: {
           borderRadius: 0,
-        },
-      },
-    },
-    MuiDataGrid: {
-      styleOverrides: {
-        root: {
-          border: "1px solid #e5e7eb",
-          borderRadius: "4px",
-          "& .MuiDataGrid-cell": {
-            borderColor: "#f3f4f6",
-          },
-          "& .MuiDataGrid-columnHeaders": {
-            backgroundColor: "#f9fafb",
-            borderColor: "#e5e7eb",
-          },
-          "& .MuiDataGrid-footerContainer": {
-            borderColor: "#e5e7eb",
-          },
         },
       },
     },

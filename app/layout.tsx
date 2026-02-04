@@ -2,6 +2,7 @@ import type React from "react"
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import "./globals.css"
+import "@vivaahealth/design-system/dist/index.css"
 import { MuiThemeProvider } from "@/components/providers/mui-theme-provider"
 import { AppLayout } from "@/components/layout/app-layout"
 
@@ -12,9 +13,8 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
-  title: "Notable Flow Store",
-  description: "Healthcare automation flows marketplace",
-  generator: "v0.app",
+  title: "Flow Studio UI Prototype",
+  description: "Product design prototyping environment for Notable Flow Studio",
 }
 
 export default function RootLayout({
