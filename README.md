@@ -1,8 +1,10 @@
-# Flow Studio Prototype
+# Flow Studio - Prototype Template
 
 A rapid prototyping environment for Notable product design. Built with Vite + React for lightning-fast iteration.
 
 > ⚠️ **This is a prototype sandbox** — not a production app. All data is local (IndexedDB). No API connections.
+
+<img width="3584" height="2084" alt="image" src="https://github.com/user-attachments/assets/6f9b9df0-e7f2-4d8c-9ab0-f99182b45693" />
 
 ---
 
