@@ -1,6 +1,6 @@
 # Flow Studio - Prototype Template
 
-A rapid prototyping environment for Notable product design. Built with Vite + React for lightning-fast iteration.
+A rapid prototyping environment for Notable Health product design. Built with Vite + React for lightning-fast iteration.
 
 > ⚠️ **This is a prototype sandbox** — not a production app. All data is local (IndexedDB). No API connections.
 
