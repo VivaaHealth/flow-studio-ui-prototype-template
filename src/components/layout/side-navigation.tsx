@@ -24,6 +24,11 @@ import { useUIStore, selectIsSidebarExpanded } from '@/lib/stores'
 
 const SIDEBAR_NAVIGATION_DRAWER_WIDTH = 228
 const SIDEBAR_NAVIGATION_COLLAPSED_WIDTH = 52
+// Logo: N (fixed, always visible) + text (fades in when expanded)
+const LOGO_N_WIDTH = 22
+const LOGO_TEXT_WIDTH = 92
+const LOGO_LEFT_OFFSET = '1rem' // 16px total from drawer edge to N
+const LOGO_TEXT_GAP = '0.5rem' // 8px between N and text
 const CUSTOM_SCROLL_BAR_SIZE_IN_PIXELS = 8
 const NAVIGATION_HORIZONTAL_PADDING = 16
 const DARK_THEME_FONT_COLOR = '#F0F1FF'
@@ -73,11 +78,11 @@ const navigationSections: RouteSection[] = [
     ],
   },
   {
-    label: 'Integrate',
+    label: 'Connect',
     type: 'main',
     links: [
       { label: 'API Instances', to: '/api-instances' },
-      { label: 'Connections', to: '/connections' },
+      { label: 'Connectors', to: '/connections' },
     ],
   },
   {
@@ -121,13 +126,19 @@ const navigationSections: RouteSection[] = [
 // Dark Theme
 // ============================================================================
 
+// 0.25% letter-spacing as length (CSS letter-spacing uses length, not %)
+const LETTER_SPACING_025 = '0.0025em'
+
 const darkTheme = createTheme({
   palette: {
     mode: 'dark',
     background: { default: '#030A33', paper: '#030A33' },
     primary: { main: colors.extended.blue[60], contrastText: DARK_THEME_FONT_COLOR },
     text: { primary: DARK_THEME_FONT_COLOR, secondary: DARK_THEME_FONT_COLOR },
-    divider: '#282E54',
+    divider: '#353B5C',
+  },
+  typography: {
+    allVariants: { letterSpacing: LETTER_SPACING_025 },
   },
   components: {
     MuiAccordion: {
@@ -141,7 +152,8 @@ const darkTheme = createTheme({
         root: {
           borderRadius: 4,
           minHeight: 32,
-          padding: `0 ${NAVIGATION_HORIZONTAL_PADDING - CUSTOM_SCROLL_BAR_SIZE_IN_PIXELS}px`,
+          padding: `2px ${NAVIGATION_HORIZONTAL_PADDING - CUSTOM_SCROLL_BAR_SIZE_IN_PIXELS}px`,
+          letterSpacing: LETTER_SPACING_025,
           '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.1)' },
         },
         content: { margin: '4px 0', '&.Mui-expanded': { margin: '4px 0' } },
@@ -157,18 +169,33 @@ const darkTheme = createTheme({
     },
     MuiButton: {
       styleOverrides: {
-        root: { fontWeight: 400, '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.1)' } },
+        root: {
+          fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+          fontWeight: 600,
+          letterSpacing: LETTER_SPACING_025,
+          boxShadow: 'none',
+          '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.1)', boxShadow: 'none' },
+          '&:active': { boxShadow: 'none' },
+        },
       },
     },
     MuiIconButton: {
-      styleOverrides: { root: { '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.1)' } } },
+      styleOverrides: {
+        root: {
+          minHeight: 32,
+          maxHeight: 32,
+          width: 32,
+          padding: '4px',
+          '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.1)' },
+        },
+      },
     },
     MuiLink: {
-      styleOverrides: { root: { borderRadius: 4, '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.1)' } } },
+      styleOverrides: { root: { borderRadius: 4, letterSpacing: LETTER_SPACING_025, '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.1)' } } },
     },
     MuiInputBase: {
       styleOverrides: {
-        input: { fontSize: '1rem', '&::placeholder': { color: '#9CA3AF', opacity: 0.9, fontStyle: 'italic' } },
+        input: { fontSize: '1rem', letterSpacing: LETTER_SPACING_025, '&::placeholder': { color: '#9CA3AF', opacity: 0.9, fontStyle: 'italic' } },
       },
     },
   },
@@ -192,25 +219,43 @@ const customScrollbarStyles = {
 // Components
 // ============================================================================
 
-function SidebarNavigationLink({ link }: { link: RouteLink }) {
+function SidebarNavigationLink({ link, sectionLabel }: { link: RouteLink; sectionLabel: string }) {
   const location = useLocation()
   const isExpanded = useUIStore(selectIsSidebarExpanded)
+  const setExpandedSection = useUIStore((s) => s.setExpandedSection)
   const isActive = location.pathname === link.to || location.pathname.startsWith(link.to + '/')
+
+  const handleClick = () => {
+    // Collapse all other sections and expand the section containing this link
+    setExpandedSection(sectionLabel)
+  }
 
   return (
     <Stack direction="row" spacing={1}>
       <Divider orientation="vertical" flexItem sx={{ borderColor: isActive ? 'white' : 'divider' }} />
-      <Text variant="paragraph-medium" sx={{ display: 'inline-block', width: '100%' }}>
+      <Text
+        variant="paragraph-medium"
+        sx={{
+          display: 'inline-block',
+          width: '100%',
+          fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+          fontSize: '14px',
+          fontWeight: 400,
+          lineHeight: '130%',
+          letterSpacing: LETTER_SPACING_025,
+        }}
+      >
         <Link
           to={link.to}
           tabIndex={!isExpanded ? -1 : 0}
+          onClick={handleClick}
           style={{
             display: 'inline-block',
             width: '100%',
             paddingLeft: 6,
             paddingRight: 6,
-            paddingTop: 2,
-            paddingBottom: 2,
+            paddingTop: '4px',
+            paddingBottom: '4px',
             borderRadius: 4,
             color: 'inherit',
             textDecoration: 'none',
@@ -256,10 +301,12 @@ function SidebarNavigationLinkAccordion({ routeSection }: { routeSection: RouteS
           {label}
         </Text>
       </AccordionSummary>
-      <AccordionDetails>
-        {links.map((link) => (
-          <SidebarNavigationLink key={link.label} link={link} />
-        ))}
+      <AccordionDetails sx={{ display: 'block', paddingTop: 0, marginTop: '2px' }}>
+        <Stack gap="2px">
+          {links.map((link) => (
+            <SidebarNavigationLink key={link.label} link={link} sectionLabel={label} />
+          ))}
+        </Stack>
       </AccordionDetails>
     </Accordion>
   )
@@ -287,7 +334,7 @@ function SidebarNavigationTopSection() {
   const isExpanded = useUIStore(selectIsSidebarExpanded)
 
   return (
-    <Stack gap={0.5} divider={<Divider />}>
+    <Stack gap={0} divider={<Divider />}>
       <Stack direction="row" justifyContent="space-between" alignItems="center" paddingRight={!isExpanded ? 0 : 2}>
         <Link
           to="/"
@@ -296,63 +343,127 @@ function SidebarNavigationTopSection() {
           style={{
             display: 'flex',
             alignItems: 'center',
-            justifyContent: !isExpanded ? 'center' : 'flex-start',
-            marginLeft: !isExpanded ? 0 : 16,
+            flex: !isExpanded ? 1 : 'none',
+            minWidth: 0,
+            marginLeft: 0,
             marginRight: !isExpanded ? 0 : 16,
-            paddingTop: 6,
-            paddingBottom: 8,
-            width: !isExpanded ? '100%' : 'auto',
+            marginBottom: '1px',
+            paddingTop: 19,
+            paddingBottom: 19,
+            paddingLeft: LOGO_LEFT_OFFSET,
             textDecoration: 'none',
+            overflow: 'hidden',
           }}
         >
-          {!isExpanded ? (
-            <Box sx={{ width: 28, height: 28, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect width="24" height="24" rx="4" fill="url(#notable-gradient)" />
-                <path d="M7.5 17V7H9.5L14.5 14V7H16.5V17H14.5L9.5 10V17H7.5Z" fill="white" />
-                <defs>
-                  <linearGradient id="notable-gradient" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
-                    <stop stopColor="#3B82F6" />
-                    <stop offset="1" stopColor="#1D4ED8" />
-                  </linearGradient>
-                </defs>
-              </svg>
-            </Box>
-          ) : (
-            <Box sx={{ width: 120, overflow: 'hidden', display: 'inline-block' }}>
-              <img src="/images/notable-full-logo.svg" alt="Notable" width={119} height={16} style={{ display: 'block' }} />
-            </Box>
-          )}
+          {/* N: always visible, fixed position; 2x intrinsic size for crisp SVG on retina */}
+          <Box
+            sx={{
+              flexShrink: 0,
+              width: LOGO_N_WIDTH,
+              height: 16,
+              overflow: 'hidden',
+            }}
+          >
+            <img
+              src="/images/notable-n.svg"
+              alt=""
+              width={LOGO_N_WIDTH * 2}
+              height={32}
+              style={{
+                display: 'block',
+                width: LOGO_N_WIDTH,
+                height: 16,
+                imageRendering: 'auto',
+              }}
+              aria-hidden
+            />
+          </Box>
+          {/* Text: 8px gap from N; fades in at full size on entry, fades out then collapses on exit; 2x for crisp SVG */}
+          <Box
+            sx={{
+              width: isExpanded ? LOGO_TEXT_WIDTH : 0,
+              marginLeft: isExpanded ? LOGO_TEXT_GAP : 0,
+              height: 16,
+              overflow: 'hidden',
+              opacity: isExpanded ? 1 : 0,
+              transition: isExpanded
+                ? 'opacity 0.2s ease, width 0s ease 0s, margin-left 0s ease 0s'
+                : 'opacity 0.2s ease, width 0s ease 0.2s, margin-left 0s ease 0.2s',
+            }}
+          >
+            <img
+              src="/images/notable-text.svg"
+              alt="otable"
+              width={LOGO_TEXT_WIDTH * 2}
+              height={32}
+              style={{
+                display: 'block',
+                width: LOGO_TEXT_WIDTH,
+                height: 16,
+                imageRendering: 'auto',
+              }}
+              aria-hidden
+            />
+          </Box>
         </Link>
         {isExpanded && <SidebarNavigationButton />}
       </Stack>
-      <Box sx={{ marginX: !isExpanded ? 0 : 2, display: 'flex', alignItems: 'center', justifyContent: !isExpanded ? 'center' : 'flex-start' }}>
-        {!isExpanded ? (
-          <IconButton aria-label="Search" sx={{ color: '#9CA3AF' }}>
-            <Search size={20} />
-          </IconButton>
-        ) : (
+      <Box
+        sx={{
+          marginX: 0,
+          width: '100%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: !isExpanded ? 'center' : 'flex-start',
+          paddingLeft: LOGO_LEFT_OFFSET,
+          backgroundColor: 'transparent',
+          '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.1)' },
+          '&:has(.Mui-focused)': { backgroundColor: 'rgba(255, 255, 255, 0.2)' },
+        }}
+      >
+        {/* Search icon: always visible, fixed position - just an icon, no button */}
+        <Box sx={{ flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', transform: 'translateY(-1px)' }}>
+          <Search size={16} color="white" />
+        </Box>
+        {/* Search input: fades in when expanding, fades out when collapsing */}
+        <Box
+          sx={{
+            flex: 1,
+            minWidth: 0,
+            marginLeft: '8px',
+            opacity: isExpanded ? 1 : 0,
+            width: isExpanded ? 'auto' : 0,
+            overflow: 'hidden',
+            transition: isExpanded
+              ? 'opacity 0.2s ease, width 0s ease 0s, margin-left 0s ease 0s'
+              : 'opacity 0.2s ease, width 0s ease 0.2s, margin-left 0s ease 0.2s',
+          }}
+        >
           <TextField
             fullWidth
             variant="outlined"
             size="small"
             placeholder="Search"
             InputProps={{
-              startAdornment: (
-                <InputAdornment position="start" sx={{ color: 'inherit' }}>
-                  <Search size={16} color="#9CA3AF" />
-                </InputAdornment>
-              ),
               sx: {
                 backgroundColor: 'transparent',
-                '& .MuiOutlinedInput-notchedOutline': { border: 'none' },
-                '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.1)' },
-                '&.Mui-focused': { backgroundColor: 'rgba(255, 255, 255, 0.2)' },
+                minHeight: 48,
+                paddingTop: '4px',
+                paddingBottom: '4px',
+                paddingLeft: '0px',
+                borderRadius: 0,
+                '& .MuiOutlinedInput-notchedOutline': { border: 'none', borderRadius: 0 },
+                '& input': {
+                  paddingLeft: '0px',
+                },
                 color: 'white',
+                '& input::placeholder': {
+                  fontStyle: 'italic',
+                },
               },
             }}
           />
-        )}
+        </Box>
       </Box>
     </Stack>
   )
@@ -379,13 +490,6 @@ function SidebarNavigationMiddleSection() {
       {mainSections.map((routeSection) => (
         <SidebarNavigationLinkAccordion key={routeSection.label} routeSection={routeSection} />
       ))}
-      <Divider
-        sx={{
-          marginY: 1,
-          marginLeft: `-${NAVIGATION_HORIZONTAL_PADDING - CUSTOM_SCROLL_BAR_SIZE_IN_PIXELS}px`,
-          marginRight: `-${NAVIGATION_HORIZONTAL_PADDING - CUSTOM_SCROLL_BAR_SIZE_IN_PIXELS}px`,
-        }}
-      />
       {secondarySections.map((routeSection) => (
         <SidebarNavigationLinkAccordion key={routeSection.label} routeSection={routeSection} />
       ))}
@@ -397,51 +501,98 @@ function SidebarNavigationBottomSection() {
   const isExpanded = useUIStore(selectIsSidebarExpanded)
 
   return (
-    <Stack marginX={!isExpanded ? 0 : 2} gap={0.5} alignItems={!isExpanded ? 'center' : 'flex-start'} justifyContent="center">
-      {!isExpanded ? (
-        <>
-          <IconButton
-            component="a"
-            href="https://docs.notablehealth.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Documentation"
-            sx={{ color: 'white' }}
-          >
-            <FileText size={20} />
-          </IconButton>
-          <IconButton onClick={() => console.log('Sign out clicked')} aria-label="Sign Out" sx={{ color: 'white' }}>
-            <LogOut size={20} />
-          </IconButton>
-        </>
-      ) : (
-        <>
+    <Stack gap={0.5} alignItems="flex-start" justifyContent="center" sx={{ paddingLeft: LOGO_LEFT_OFFSET, paddingBottom: '4px' }}>
+      {/* Documentation: icon always visible, text fades in/out */}
+      <Box sx={{ display: 'flex', alignItems: 'center', width: '100%', gap: '8px' }}>
+        <Box
+          component="a"
+          href="https://docs.notablehealth.com/l"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Documentation"
+          sx={{ flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', textDecoration: 'none' }}
+        >
+          <FileText size={16} color="white" />
+        </Box>
+        <Box
+          sx={{
+            flex: 1,
+            minWidth: 0,
+            opacity: isExpanded ? 1 : 0,
+            width: isExpanded ? 'auto' : 0,
+            overflow: 'hidden',
+            transition: isExpanded
+              ? 'opacity 0.2s ease, width 0s ease 0s'
+              : 'opacity 0.2s ease, width 0s ease 0.2s',
+          }}
+        >
           <Button
             component="a"
             variant="text"
-            href="https://docs.notablehealth.com"
+            href="https://docs.notablehealth.com/l"
             target="_blank"
             rel="noopener noreferrer"
-            startIcon={<FileText size={16} />}
             color="inherit"
             fullWidth
-            sx={{ justifyContent: 'flex-start', textTransform: 'none' }}
+            sx={{ 
+              justifyContent: 'flex-start', 
+              textTransform: 'none', 
+              paddingLeft: 0,
+              '&:hover': { backgroundColor: 'transparent' },
+            }}
           >
             <Text variant="paragraph-medium">Documentation</Text>
           </Button>
+        </Box>
+      </Box>
+      {/* Sign Out: icon always visible, text fades in/out */}
+      <Box sx={{ display: 'flex', alignItems: 'center', width: '100%', gap: '8px' }}>
+        <Box
+          component="button"
+          onClick={() => console.log('Sign out clicked')}
+          aria-label="Sign Out"
+          sx={{
+            flexShrink: 0,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            background: 'none',
+            border: 'none',
+            padding: 0,
+            cursor: 'pointer',
+          }}
+        >
+          <LogOut size={16} color="white" />
+        </Box>
+        <Box
+          sx={{
+            flex: 1,
+            minWidth: 0,
+            opacity: isExpanded ? 1 : 0,
+            width: isExpanded ? 'auto' : 0,
+            overflow: 'hidden',
+            transition: isExpanded
+              ? 'opacity 0.2s ease, width 0s ease 0s'
+              : 'opacity 0.2s ease, width 0s ease 0.2s',
+          }}
+        >
           <Button
             variant="text"
             color="inherit"
-            startIcon={<LogOut size={16} />}
             onClick={() => console.log('Sign out clicked')}
             fullWidth
-            sx={{ justifyContent: 'flex-start', textTransform: 'none' }}
+            sx={{ 
+              justifyContent: 'flex-start', 
+              textTransform: 'none', 
+              paddingLeft: 0,
+              '&:hover': { backgroundColor: 'transparent' },
+            }}
             aria-label="Sign Out"
           >
             <Text variant="paragraph-medium">Sign Out</Text>
           </Button>
-        </>
-      )}
+        </Box>
+      </Box>
     </Stack>
   )
 }
@@ -474,9 +625,11 @@ export function SideNavigation() {
           paper: {
             sx: {
               overflow: 'hidden',
-              paddingY: 0.5,
+              paddingTop: 0,
+              paddingBottom: 0.5,
               background: 'linear-gradient(180deg, #030A33 0%, #00044B 100%)',
               boxShadow: isOverlay && isExpanded ? 6 : 0,
+              '& *': { letterSpacing: LETTER_SPACING_025 },
             },
           },
         }}
@@ -490,11 +643,13 @@ export function SideNavigation() {
         <Stack
           role="navigation"
           sx={{ height: '100%', gap: 0.5, borderRadius: 0, overflowX: 'hidden' }}
-          divider={<Divider />}
           tabIndex={!isExpanded ? -1 : 0}
         >
-          <SidebarNavigationTopSection />
+          <Box sx={(theme) => ({ boxShadow: `0 1px 0 0 ${theme.palette.divider}` })}>
+            <SidebarNavigationTopSection />
+          </Box>
           <SidebarNavigationMiddleSection />
+          <Divider />
           <SidebarNavigationBottomSection />
         </Stack>
       </Drawer>

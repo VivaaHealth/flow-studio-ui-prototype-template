@@ -32,6 +32,7 @@ interface UIState {
   setSidebarMode: (mode: SideNavigationMode) => void
   setSidebarHovering: (hovering: boolean) => void
   toggleSection: (section: string) => void
+  setExpandedSection: (section: string | null) => void
   openModal: (id: string, data?: Record<string, unknown>) => void
   closeModal: () => void
   showToast: (toast: Omit<Toast, 'id'>) => void
@@ -74,6 +75,15 @@ export const useUIStore = create<UIState>()(
             state.expandedSections.splice(index, 1)
           } else {
             state.expandedSections.push(section)
+          }
+        }),
+
+      setExpandedSection: (section) =>
+        set((state) => {
+          if (section === null) {
+            state.expandedSections = []
+          } else {
+            state.expandedSections = [section]
           }
         }),
 
