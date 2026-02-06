@@ -1,7 +1,7 @@
 import { createTheme } from '@mui/material/styles'
 
 // MUI theme configuration aligned with @vivaahealth/design-system
-export const muiTheme = createTheme({
+export const createMuiTheme = (backgroundWarm: boolean = true) => createTheme({
   palette: {
     primary: {
       main: '#002766',
@@ -28,7 +28,7 @@ export const muiTheme = createTheme({
       900: '#111827',
     },
     background: {
-      default: '#ffffff',
+      default: backgroundWarm ? '#F6F4F4' : '#FBFBFC',
       paper: '#ffffff',
     },
     text: {
@@ -51,6 +51,11 @@ export const muiTheme = createTheme({
   typography: {
     fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
     fontSize: 14,
+    allVariants: {
+      WebkitFontSmoothing: 'antialiased',
+      MozOsxFontSmoothing: 'grayscale',
+      textRendering: 'optimizeLegibility',
+    },
     h1: {
       fontSize: '1.5rem',
       fontWeight: 600,
@@ -100,8 +105,9 @@ export const muiTheme = createTheme({
       letterSpacing: '0.0025em',
     },
     button: {
+      fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
       fontSize: '0.875rem',
-      fontWeight: 500,
+      fontWeight: 600,
       textTransform: 'none',
       letterSpacing: '0.0025em',
     },
@@ -114,10 +120,54 @@ export const muiTheme = createTheme({
     MuiButton: {
       styleOverrides: {
         root: {
+          fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+          fontWeight: 600,
           borderRadius: '4px',
           textTransform: 'none',
-          fontWeight: 500,
+          boxShadow: 'none',
+          display: 'inline-flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          verticalAlign: 'middle',
           transition: 'all 200ms ease-in-out',
+          '& .MuiButton-startIcon': {
+            marginLeft: 0,
+            marginRight: '8px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          },
+          '& .MuiButton-endIcon': {
+            marginLeft: '8px',
+            marginRight: 0,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          },
+          '&:hover': {
+            boxShadow: 'none',
+          },
+          '&:active': {
+            boxShadow: 'none',
+          },
+        },
+        contained: {
+          boxShadow: 'none',
+          '&:hover': {
+            boxShadow: 'none',
+          },
+          '&:active': {
+            boxShadow: 'none',
+          },
+        },
+        outlined: {
+          boxShadow: 'none',
+          '&:hover': {
+            boxShadow: 'none',
+          },
+          '&:active': {
+            boxShadow: 'none',
+          },
         },
         containedPrimary: {
           backgroundColor: '#0061FF',
@@ -125,9 +175,59 @@ export const muiTheme = createTheme({
             backgroundColor: '#0052D9',
           },
         },
+        // Size specs: Small 24px, Medium 32px, Large 40px (padding + text line-height = height)
+        sizeSmall: {
+          minHeight: 24,
+          maxHeight: 24,
+          padding: '4px 8px',
+          fontSize: '0.75rem',
+          lineHeight: 1,
+          '& .MuiButton-startIcon': {
+            marginRight: '6px',
+          },
+          '& .MuiButton-endIcon': {
+            marginLeft: '6px',
+          },
+        },
+        sizeMedium: {
+          minHeight: 32,
+          maxHeight: 32,
+          padding: '6px 8px',
+          fontSize: '0.875rem',
+          lineHeight: 1,
+          '& .MuiButton-startIcon': {
+            marginRight: '8px',
+          },
+          '& .MuiButton-endIcon': {
+            marginLeft: '8px',
+          },
+        },
+        sizeLarge: {
+          minHeight: 40,
+          maxHeight: 40,
+          padding: '8px 8px',
+          fontSize: '1rem',
+          lineHeight: 1,
+          '& .MuiButton-startIcon': {
+            marginRight: '10px',
+          },
+          '& .MuiButton-endIcon': {
+            marginLeft: '10px',
+          },
+        },
       },
       defaultProps: {
         disableRipple: true,
+      },
+    },
+    MuiIconButton: {
+      styleOverrides: {
+        root: {
+          minHeight: 32,
+          maxHeight: 32,
+          width: 32,
+          padding: '4px',
+        },
       },
     },
     MuiTextField: {
@@ -176,3 +276,6 @@ export const muiTheme = createTheme({
     },
   },
 })
+
+// Default theme export for backwards compatibility
+export const muiTheme = createMuiTheme(true)

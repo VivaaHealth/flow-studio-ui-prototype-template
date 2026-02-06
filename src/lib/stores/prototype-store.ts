@@ -14,6 +14,7 @@ export interface FeatureFlags {
   showPlaceholderPages: boolean
   useMockLatency: boolean
   mockLatencyMs: number
+  backgroundWarm: boolean
 }
 
 interface PrototypeState {
@@ -46,6 +47,7 @@ const DEFAULT_FEATURE_FLAGS: FeatureFlags = {
   showPlaceholderPages: true,
   useMockLatency: false,
   mockLatencyMs: 500,
+  backgroundWarm: true,
 }
 
 // ============================================================================
