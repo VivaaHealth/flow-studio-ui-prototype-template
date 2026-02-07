@@ -12,6 +12,8 @@ import { FlowsPage } from '@/routes/flows/flows-page'
 import { FlowDetailPage } from '@/routes/flows/flow-detail-page'
 import { AgentsPage } from '@/routes/agents/agents-page'
 import { ConnectorsPage } from '@/routes/connectors/connectors-page'
+import { ConnectorDetailPage } from '@/routes/connectors/connector-detail-page'
+import { ConnectorTemplatesPage } from '@/routes/connectors/connector-templates-page'
 import { PlaceholderPage } from '@/routes/placeholder-page'
 
 const queryClient = new QueryClient({
@@ -53,9 +55,13 @@ function ThemedApp() {
             <Route path="/messages" element={<PlaceholderPage title="Messages" />} />
             <Route path="/sms-tasks" element={<PlaceholderPage title="SMS Tasks" />} />
             
-            {/* Integrate */}
-            <Route path="/api-instances" element={<PlaceholderPage title="API Instances" />} />
+            {/* Connect */}
             <Route path="/connections" element={<ConnectorsPage />} />
+            <Route path="/connections/templates" element={<ConnectorTemplatesPage />} />
+            <Route path="/feeds" element={<PlaceholderPage title="Feeds" />} />
+            <Route path="/triggers" element={<PlaceholderPage title="Triggers" />} />
+            <Route path="/ehr-systems" element={<PlaceholderPage title="EHR Systems" />} />
+            <Route path="/connections/:id" element={<ConnectorDetailPage />} />
             
             {/* Manage */}
             <Route path="/users" element={<PlaceholderPage title="Users" />} />

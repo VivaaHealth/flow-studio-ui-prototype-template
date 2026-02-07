@@ -55,9 +55,17 @@ export function PageLayout({
         sx={{
           flex: 1,
           width: '100%',
-          overflowY: 'auto',
-          scrollbarGutter: 'stable',
-          ...(contentPadding && { p: 6 }),
+          ...(contentPadding
+            ? {
+                overflowY: 'auto',
+                scrollbarGutter: 'stable',
+                p: 6,
+              }
+            : {
+                overflow: 'hidden',
+                display: 'flex',
+                flexDirection: 'column',
+              }),
         }}
       >
         {children}
