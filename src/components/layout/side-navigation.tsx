@@ -81,8 +81,10 @@ const navigationSections: RouteSection[] = [
     label: 'Connect',
     type: 'main',
     links: [
-      { label: 'API Instances', to: '/api-instances' },
       { label: 'Connectors', to: '/connections' },
+      { label: 'Feeds', to: '/feeds' },
+      { label: 'Triggers', to: '/triggers' },
+      { label: 'EHR Systems', to: '/ehr-systems' },
     ],
   },
   {
